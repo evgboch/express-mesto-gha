@@ -13,14 +13,14 @@ function createCard(req, res) {
   Card.create({ name, link, owner: req.user._id })
     .then((card) => {
       res.send(card);
-    })
+    });
 }
 
 function deleteCard(req, res) {
   Card.findByIdAndRemove(req.params.cardId)
     .then((card) => {
       res.send(card);
-    })
+    });
 }
 
 function likeCard(req, res) {
@@ -31,7 +31,7 @@ function likeCard(req, res) {
   )
     .then((card) => {
       res.send(card);
-    })
+    });
 }
 
 function dislikeCard(req, res) {
@@ -42,7 +42,7 @@ function dislikeCard(req, res) {
   )
     .then((card) => {
       res.send(card);
-    })
+    });
 }
 
 module.exports = {
@@ -51,4 +51,4 @@ module.exports = {
   deleteCard,
   likeCard,
   dislikeCard,
-}
+};

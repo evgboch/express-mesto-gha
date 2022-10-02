@@ -28,12 +28,12 @@ function updateUserInfo(req, res) {
 
   User.findByIdAndUpdate(
     req.user._id,
-    { name , about },
-    { new: true }
-    )
+    { name, about },
+    { new: true },
+  )
     .then((user) => {
       res.send(user);
-    })
+    });
 }
 
 function updateUserAvatar(req, res) {
@@ -42,11 +42,11 @@ function updateUserAvatar(req, res) {
   User.findByIdAndUpdate(
     req.user._id,
     { avatar },
-    { new: true }
-    )
+    { new: true },
+  )
     .then((user) => {
       res.send(user);
-    })
+    });
 }
 
 module.exports = {
@@ -54,5 +54,5 @@ module.exports = {
   getUser,
   createUser,
   updateUserInfo,
-  updateUserAvatar
+  updateUserAvatar,
 };
