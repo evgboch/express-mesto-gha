@@ -54,7 +54,10 @@ function updateUserInfo(req, res) {
   User.findByIdAndUpdate(
     req.user._id,
     { name, about },
-    { new: true },
+    {
+      new: true,
+      runValidators: true,
+    },
   )
     .orFail(() => {
       const error = new Error();
@@ -81,7 +84,10 @@ function updateUserAvatar(req, res) {
   User.findByIdAndUpdate(
     req.user._id,
     { avatar },
-    { new: true },
+    {
+      new: true,
+      runValidators: true,
+    },
   )
     .orFail(() => {
       const error = new Error();
