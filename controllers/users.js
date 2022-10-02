@@ -13,6 +13,11 @@ function getUsersList(req, res) {
 
 function getUser(req, res) {
   User.findById(req.params.userId)
+    .orFail(() => {
+      const error = new Error();
+      error.name = 'DocumentNotFoundError';
+      throw error;
+    })
     .then((user) => {
       res.send(user);
     })
@@ -51,6 +56,11 @@ function updateUserInfo(req, res) {
     { name, about },
     { new: true },
   )
+    .orFail(() => {
+      const error = new Error();
+      error.name = 'DocumentNotFoundError';
+      throw error;
+    })
     .then((user) => {
       res.send(user);
     })
@@ -73,6 +83,11 @@ function updateUserAvatar(req, res) {
     { avatar },
     { new: true },
   )
+    .orFail(() => {
+      const error = new Error();
+      error.name = 'DocumentNotFoundError';
+      throw error;
+    })
     .then((user) => {
       res.send(user);
     })

@@ -29,6 +29,11 @@ function createCard(req, res) {
 
 function deleteCard(req, res) {
   Card.findByIdAndRemove(req.params.cardId)
+    .orFail(() => {
+      const error = new Error();
+      error.name = 'DocumentNotFoundError';
+      throw error;
+    })
     .then((card) => {
       res.send(card);
     })
@@ -49,6 +54,11 @@ function likeCard(req, res) {
     { $addToSet: { likes: req.user._id } },
     { new: true },
   )
+    .orFail(() => {
+      const error = new Error();
+      error.name = 'DocumentNotFoundError';
+      throw error;
+    })
     .then((card) => {
       res.send(card);
     })
@@ -69,6 +79,11 @@ function dislikeCard(req, res) {
     { $pull: { likes: req.user._id } },
     { new: true },
   )
+    .orFail(() => {
+      const error = new Error();
+      error.name = 'DocumentNotFoundError';
+      throw error;
+    })
     .then((card) => {
       res.send(card);
     })
