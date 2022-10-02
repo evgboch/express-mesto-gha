@@ -4,14 +4,14 @@ function getUsersList(req, res) {
   User.find({})
     .then((users) => {
       res.send(users);
-    })
+    });
 }
 
 function getUser(req, res) {
   User.findById(req.params.userId)
     .then((user) => {
       res.send(user);
-    })
+    });
 }
 
 function createUser(req, res) {
@@ -20,11 +20,11 @@ function createUser(req, res) {
   User.create({ name, about, avatar })
     .then((user) => {
       res.send(user);
-    })
+    });
 }
 
 module.exports = {
   getUsersList,
   getUser,
-  createUser
-}
+  createUser,
+};
