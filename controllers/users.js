@@ -1,9 +1,13 @@
 const User = require('../models/user');
+const { handleBadRequestError, handleDefaultError, handleNotFoundError } = require('../utils/errors');
 
 function getUsersList(req, res) {
   User.find({})
     .then((users) => {
       res.send(users);
+    })
+    .catch(() => {
+      handleDefaultError(res);
     });
 }
 
@@ -11,6 +15,15 @@ function getUser(req, res) {
   User.findById(req.params.userId)
     .then((user) => {
       res.send(user);
+    })
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        handleBadRequestError(res);
+      } else if (err.name === 'DocumentNotFoundError') {
+        handleNotFoundError(res);
+      } else {
+        handleDefaultError(res);
+      }
     });
 }
 
@@ -20,6 +33,13 @@ function createUser(req, res) {
   User.create({ name, about, avatar })
     .then((user) => {
       res.send(user);
+    })
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        handleBadRequestError(res);
+      } else {
+        handleDefaultError(res);
+      }
     });
 }
 
@@ -33,6 +53,15 @@ function updateUserInfo(req, res) {
   )
     .then((user) => {
       res.send(user);
+    })
+    .catch((err) => {
+      if ((err.name === 'ValidationError') || (err.name === 'CastError')) {
+        handleBadRequestError(res);
+      } else if (err.name === 'DocumentNotFoundError') {
+        handleNotFoundError(res);
+      } else {
+        handleDefaultError(res);
+      }
     });
 }
 
@@ -46,6 +75,15 @@ function updateUserAvatar(req, res) {
   )
     .then((user) => {
       res.send(user);
+    })
+    .catch((err) => {
+      if ((err.name === 'ValidationError') || (err.name === 'CastError')) {
+        handleBadRequestError(res);
+      } else if (err.name === 'DocumentNotFoundError') {
+        handleNotFoundError(res);
+      } else {
+        handleDefaultError(res);
+      }
     });
 }
 
