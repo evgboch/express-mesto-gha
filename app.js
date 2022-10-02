@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const usersRouter = require('./routes/users');
 const cardsRouter = require('./routes/cards');
+const incorrectPathRouter = require('./routes/incorrectPath');
 
 const app = express();
 
@@ -16,6 +17,7 @@ app.use((req, res, next) => {
 });
 app.use('/users', usersRouter);
 app.use('/cards', cardsRouter);
+app.use('*', incorrectPathRouter);
 
 mongoose.connect('mongodb://localhost:27017/mestodb');
 
