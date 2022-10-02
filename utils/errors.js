@@ -10,7 +10,7 @@ function handleBadRequestError(res) {
 function handleDefaultError(res) {
   res.status(errorStatusList.internalServerError);
   res.send({
-    message: 'Извините, произошла ошибка.',
+    message: 'На сервере произошла ошибка.',
   });
 }
 
