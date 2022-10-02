@@ -7,7 +7,7 @@ const cardSchema = new mongoose.Schema({
     maxlength: 30,
     required: true,
   },
-  avatar: {
+  link: {
     type: String,
     required: true,
   },
