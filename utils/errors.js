@@ -17,7 +17,7 @@ function handleDefaultError(res) {
 function handleNotFoundError(res) {
   res.status(errorStatusList.notFound);
   res.send({
-    message: 'Ошибка: данные с запрошенным идентификатором не найдены.',
+    message: 'Ошибка: данные не найдены.',
   });
 }
 

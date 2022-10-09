@@ -133,6 +133,27 @@ function login(req, res) {
     });
 }
 
+function getOwnInfo(req, res) {
+  User.findById(req.user._id)
+    .orFail(() => {
+      const error = new Error();
+      error.name = 'DocumentNotFoundError';
+      throw error;
+    })
+    .then((user) => {
+      res.send(user);
+    })
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        handleBadRequestError(res);
+      } else if (err.name === 'DocumentNotFoundError') {
+        handleNotFoundError(res);
+      } else {
+        handleDefaultError(res);
+      }
+    });
+}
+
 module.exports = {
   getUsersList,
   getUser,
@@ -140,4 +161,5 @@ module.exports = {
   updateUserInfo,
   updateUserAvatar,
   login,
+  getOwnInfo,
 };
