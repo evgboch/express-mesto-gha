@@ -21,8 +21,24 @@ function handleNotFoundError(res) {
   });
 }
 
+function handleUnauthorizedError(res) {
+  res.status(errorStatusList.unauthorized);
+  res.send({
+    message: 'Ошибка авторизации',
+  });
+}
+
+function handleForbiddenError(res) {
+  res.status(errorStatusList.forbidden);
+  res.send({
+    message: 'Ошибка: у Вас нет прав на совершение данного действия.',
+  });
+}
+
 module.exports = {
   handleBadRequestError,
   handleDefaultError,
   handleNotFoundError,
+  handleUnauthorizedError,
+  handleForbiddenError,
 };
