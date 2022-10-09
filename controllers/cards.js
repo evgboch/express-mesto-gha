@@ -1,6 +1,9 @@
 const Card = require('../models/card');
 const {
-  handleBadRequestError, handleDefaultError, handleNotFoundError, handleForbiddenError,
+  handleBadRequestError,
+  handleDefaultError,
+  handleNotFoundError,
+  handleForbiddenError,
 } = require('../utils/errors');
 
 function getCardsList(req, res) {
