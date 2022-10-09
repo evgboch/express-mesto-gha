@@ -125,13 +125,11 @@ function login(req, res) {
         'top-secret-key',
         { expiresIn: '7d' },
       );
-
       res.send({ token });
     })
     .catch((err) => {
-      res
-        .status(401)
-        .send({ message: err.message });
+      res.status(401);
+      res.send({ message: err.message });
     });
 }
 
