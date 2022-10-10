@@ -7,4 +7,6 @@ const errorStatusList = {
   conflict: 409,
 };
 
-module.exports = { errorStatusList };
+const linkRegex = /https?:\/\/[www.]?[a-z0-9-]{1,}\.[\S]{2,}/i;
+
+module.exports = { errorStatusList, linkRegex };
