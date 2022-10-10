@@ -7,6 +7,7 @@ const cardsRouter = require('./routes/cards');
 const incorrectPathRouter = require('./routes/incorrectPath');
 const checkAuthorization = require('./middlewares/auth');
 const { createUser, login } = require('./controllers/users');
+const catchErrors = require('./middlewares/errors');
 
 const { PORT = 3000 } = process.env;
 
@@ -20,6 +21,7 @@ app.use(checkAuthorization);
 app.use('/users', usersRouter);
 app.use('/cards', cardsRouter);
 app.use('*', incorrectPathRouter);
+app.use(catchErrors);
 
 mongoose.connect('mongodb://localhost:27017/mestodb');
 

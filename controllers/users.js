@@ -1,40 +1,46 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
-const { handleBadRequestError, handleDefaultError, handleNotFoundError } = require('../utils/errors');
+// eslint-disable-next-line max-len
+// const { handleBadRequestError, handleDefaultError, handleNotFoundError } = require('../utils/errors');
+const BadRequestError = require('../errors/BadRequest');
+const ConflictError = require('../errors/Conflict');
+// const ForbiddenError = require('../errors/Forbidden');
+const NotFoundError = require('../errors/NotFound');
+// const UnauthorizedError = require('../errors/Unauthorized');
 
-function getUsersList(req, res) {
+function getUsersList(req, res, next) {
   User.find({})
     .then((users) => {
       res.send(users);
     })
-    .catch(() => {
-      handleDefaultError(res);
-    });
+    .catch(next);
 }
 
-function getUser(req, res) {
+function getUser(req, res, next) {
   User.findById(req.params.userId)
     .orFail(() => {
-      const error = new Error();
-      error.name = 'DocumentNotFoundError';
-      throw error;
+      // const error = new Error();
+      // error.name = 'DocumentNotFoundError';
+      throw new NotFoundError('Пользователь с указанным идентификатором не найден');
     })
     .then((user) => {
       res.send(user);
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        handleBadRequestError(res);
-      } else if (err.name === 'DocumentNotFoundError') {
-        handleNotFoundError(res);
+        // handleBadRequestError(res);
+        next(new BadRequestError('Вы передали некорректные данные'));
       } else {
-        handleDefaultError(res);
+        next(err);
       }
+      // else if (err.name === 'DocumentNotFoundError') {
+      //   handleNotFoundError(res);
+      // }
     });
 }
 
-function createUser(req, res) {
+function createUser(req, res, next) {
   const {
     name, about, avatar, email, password,
   } = req.body;
@@ -48,14 +54,17 @@ function createUser(req, res) {
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        handleBadRequestError(res);
+        // handleBadRequestError(res);
+        next(new BadRequestError('Вы передали некорректные данные'));
+      } else if (err.code === 11000) {
+        next(new ConflictError('Пользователь с указанной почтой уже существует'));
       } else {
-        handleDefaultError(res);
+        next(err);
       }
     });
 }
 
-function updateUserInfo(req, res) {
+function updateUserInfo(req, res, next) {
   const { name, about } = req.body;
 
   User.findByIdAndUpdate(
@@ -67,25 +76,26 @@ function updateUserInfo(req, res) {
     },
   )
     .orFail(() => {
-      const error = new Error();
-      error.name = 'DocumentNotFoundError';
-      throw error;
+      // const error = new Error();
+      // error.name = 'DocumentNotFoundError';
+      throw new NotFoundError('Пользователь с указанным идентификатором не найден');
     })
     .then((user) => {
       res.send(user);
     })
     .catch((err) => {
       if ((err.name === 'ValidationError') || (err.name === 'CastError')) {
-        handleBadRequestError(res);
-      } else if (err.name === 'DocumentNotFoundError') {
-        handleNotFoundError(res);
+        next(new BadRequestError('Вы передали некорректные данные'));
       } else {
-        handleDefaultError(res);
+        next(err);
       }
+      // else if (err.name === 'DocumentNotFoundError') {
+      //   handleNotFoundError(res);
+      // }
     });
 }
 
-function updateUserAvatar(req, res) {
+function updateUserAvatar(req, res, next) {
   const { avatar } = req.body;
 
   User.findByIdAndUpdate(
@@ -97,25 +107,26 @@ function updateUserAvatar(req, res) {
     },
   )
     .orFail(() => {
-      const error = new Error();
-      error.name = 'DocumentNotFoundError';
-      throw error;
+      // const error = new Error();
+      // error.name = 'DocumentNotFoundError';
+      throw new NotFoundError('Пользователь с указанным идентификатором не найден');
     })
     .then((user) => {
       res.send(user);
     })
     .catch((err) => {
       if ((err.name === 'ValidationError') || (err.name === 'CastError')) {
-        handleBadRequestError(res);
-      } else if (err.name === 'DocumentNotFoundError') {
-        handleNotFoundError(res);
+        next(new BadRequestError('Вы передали некорректные данные'));
       } else {
-        handleDefaultError(res);
+        next(err);
       }
+      // else if (err.name === 'DocumentNotFoundError') {
+      //   handleNotFoundError(res);
+      // }
     });
 }
 
-function login(req, res) {
+function login(req, res, next) {
   const { email, password } = req.body;
 
   return User.findUserWithCredentials(email, password)
@@ -128,29 +139,36 @@ function login(req, res) {
       res.send({ token });
     })
     .catch((err) => {
-      res.status(401);
-      res.send({ message: err.message });
+      // res.status(401);
+      // res.send({ message: err.message });
+      if (err.name === 'ValidationError') {
+        // handleBadRequestError(res);
+        next(new BadRequestError('Вы передали некорректные данные'));
+      } else {
+        next(err);
+      }
     });
 }
 
-function getOwnInfo(req, res) {
+function getOwnInfo(req, res, next) {
   User.findById(req.user._id)
     .orFail(() => {
-      const error = new Error();
-      error.name = 'DocumentNotFoundError';
-      throw error;
+      // const error = new Error();
+      // error.name = 'DocumentNotFoundError';
+      throw new NotFoundError('Пользователь с указанным идентификатором не найден');
     })
     .then((user) => {
       res.send(user);
     })
     .catch((err) => {
-      if (err.name === 'CastError') {
-        handleBadRequestError(res);
-      } else if (err.name === 'DocumentNotFoundError') {
-        handleNotFoundError(res);
+      if ((err.name === 'ValidationError') || (err.name === 'CastError')) {
+        next(new BadRequestError('Вы передали некорректные данные'));
       } else {
-        handleDefaultError(res);
+        next(err);
       }
+      // else if (err.name === 'DocumentNotFoundError') {
+      //   handleNotFoundError(res);
+      // }
     });
 }
 
