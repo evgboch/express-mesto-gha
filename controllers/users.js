@@ -122,13 +122,7 @@ function login(req, res, next) {
       );
       res.send({ token });
     })
-    .catch((err) => {
-      if (err.name === 'ValidationError') {
-        next(new BadRequestError('Вы передали некорректные данные'));
-      } else {
-        next(err);
-      }
-    });
+    .catch(next);
 }
 
 function getOwnInfo(req, res, next) {
