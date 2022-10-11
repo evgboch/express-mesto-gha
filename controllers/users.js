@@ -1,13 +1,9 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
-// eslint-disable-next-line max-len
-// const { handleBadRequestError, handleDefaultError, handleNotFoundError } = require('../utils/errors');
 const BadRequestError = require('../errors/BadRequest');
 const ConflictError = require('../errors/Conflict');
-// const ForbiddenError = require('../errors/Forbidden');
 const NotFoundError = require('../errors/NotFound');
-// const UnauthorizedError = require('../errors/Unauthorized');
 
 function getUsersList(req, res, next) {
   User.find({})
@@ -20,8 +16,6 @@ function getUsersList(req, res, next) {
 function getUser(req, res, next) {
   User.findById(req.params.userId)
     .orFail(() => {
-      // const error = new Error();
-      // error.name = 'DocumentNotFoundError';
       throw new NotFoundError('Пользователь с указанным идентификатором не найден');
     })
     .then((user) => {
@@ -29,14 +23,10 @@ function getUser(req, res, next) {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        // handleBadRequestError(res);
         next(new BadRequestError('Вы передали некорректные данные'));
       } else {
         next(err);
       }
-      // else if (err.name === 'DocumentNotFoundError') {
-      //   handleNotFoundError(res);
-      // }
     });
 }
 
@@ -59,7 +49,6 @@ function createUser(req, res, next) {
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        // handleBadRequestError(res);
         next(new BadRequestError('Вы передали некорректные данные'));
       } else if (err.code === 11000) {
         next(new ConflictError('Пользователь с указанной почтой уже существует'));
@@ -81,8 +70,6 @@ function updateUserInfo(req, res, next) {
     },
   )
     .orFail(() => {
-      // const error = new Error();
-      // error.name = 'DocumentNotFoundError';
       throw new NotFoundError('Пользователь с указанным идентификатором не найден');
     })
     .then((user) => {
@@ -94,9 +81,6 @@ function updateUserInfo(req, res, next) {
       } else {
         next(err);
       }
-      // else if (err.name === 'DocumentNotFoundError') {
-      //   handleNotFoundError(res);
-      // }
     });
 }
 
@@ -112,8 +96,6 @@ function updateUserAvatar(req, res, next) {
     },
   )
     .orFail(() => {
-      // const error = new Error();
-      // error.name = 'DocumentNotFoundError';
       throw new NotFoundError('Пользователь с указанным идентификатором не найден');
     })
     .then((user) => {
@@ -125,9 +107,6 @@ function updateUserAvatar(req, res, next) {
       } else {
         next(err);
       }
-      // else if (err.name === 'DocumentNotFoundError') {
-      //   handleNotFoundError(res);
-      // }
     });
 }
 
@@ -144,10 +123,7 @@ function login(req, res, next) {
       res.send({ token });
     })
     .catch((err) => {
-      // res.status(401);
-      // res.send({ message: err.message });
       if (err.name === 'ValidationError') {
-        // handleBadRequestError(res);
         next(new BadRequestError('Вы передали некорректные данные'));
       } else {
         next(err);
@@ -158,8 +134,6 @@ function login(req, res, next) {
 function getOwnInfo(req, res, next) {
   User.findById(req.user._id)
     .orFail(() => {
-      // const error = new Error();
-      // error.name = 'DocumentNotFoundError';
       throw new NotFoundError('Пользователь с указанным идентификатором не найден');
     })
     .then((user) => {
@@ -171,9 +145,6 @@ function getOwnInfo(req, res, next) {
       } else {
         next(err);
       }
-      // else if (err.name === 'DocumentNotFoundError') {
-      //   handleNotFoundError(res);
-      // }
     });
 }
 
