@@ -1,4 +1,3 @@
-// eslint-disable-next-line no-unused-vars
 function catchErrors(err, req, res, next) {
   const { statusCode = 500, message } = err;
 
@@ -8,6 +7,8 @@ function catchErrors(err, req, res, next) {
       ? 'На сервере произошла ошибка'
       : message,
   });
+
+  next();
 }
 
 module.exports = catchErrors;
