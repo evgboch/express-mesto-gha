@@ -34,17 +34,13 @@ function deleteCard(req, res, next) {
     })
     .then((card) => {
       if (card.owner.toString() === req.user._id) {
-        Card.findByIdAndRemove(req.params.cardId)
-          .then((removedCard) => {
-            res.send(removedCard);
+        card.remove()
+          .then(() => {
+            res.send({
+              message: 'Карточка удалена',
+            });
           })
-          .catch((err) => {
-            if (err.name === 'CastError') {
-              next(new BadRequestError('Вы передали некорректные данные'));
-            } else {
-              next(err);
-            }
-          });
+          .catch(next);
       } else {
         throw new ForbiddenError('Вы не можете удалять чужие карточки');
       }
